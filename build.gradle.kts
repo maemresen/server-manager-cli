@@ -66,6 +66,8 @@ tasks.jar {
             "Main-Class" to "com.maemresen.server.manager.cli.ServerManagerCli"
         )
     }
+
+    finalizedBy(tasks.shadowJar)
 }
 
 tasks.named<Test>("test") {
