@@ -4,6 +4,7 @@ import com.maemresen.server.manager.cli.DbConnection;
 import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
 import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -14,8 +15,8 @@ import java.util.Optional;
 public class ServerEventRepository {
 
   public void createNewEvent(Status status) throws SQLException {
-    final var sql = "INSERT INTO SERVER_EVENT (STATUS, CREATION_TIME) VALUES (?1, ?2)";
-    try (final var statmement = DbConnection.getConnection().prepareStatement(sql)) {
+    final String sql = "INSERT INTO SERVER_EVENT (STATUS, CREATION_TIME) VALUES (?1, ?2)";
+    try (final PreparedStatement statmement = DbConnection.getConnection().prepareStatement(sql)) {
       statmement.setString(1, status.toString());
       statmement.setObject(2, LocalDateTime.now());
       statmement.execute();
@@ -23,12 +24,12 @@ public class ServerEventRepository {
   }
 
   public Optional<ServerEvent> findLatest() throws SQLException {
-    final var sql =
+    final String sql =
         "SELECT id, status, creation_time FROM SERVER_EVENT ORDER BY creation_time DESC LIMIT 1";
 
-    try (final var statement = DbConnection.getConnection().prepareStatement(sql)) {
+    try (final PreparedStatement statement = DbConnection.getConnection().prepareStatement(sql)) {
       statement.execute();
-      try (final var resultSet = statement.getResultSet()) {
+      try (final ResultSet resultSet = statement.getResultSet()) {
         if (resultSet.next()) {
           return Optional.of(getServerEventFromResultSet(resultSet));
         } else {
@@ -52,10 +53,10 @@ public class ServerEventRepository {
 
     List<ServerEvent> results = new ArrayList<>();
 
-    try (final var pstmt = DbConnection.getConnection().prepareStatement(sql)) {
+    try (final PreparedStatement pstmt = DbConnection.getConnection().prepareStatement(sql)) {
       LocalDateTime fromDate = historySearchDto.getFromDate();
       LocalDateTime toDate = historySearchDto.getToDate();
-      final var statusName =
+      final String statusName =
           Optional.ofNullable(historySearchDto.getStatus()).map(Enum::name).orElse(null);
       pstmt.setObject(1, fromDate);
       pstmt.setObject(2, fromDate);
@@ -75,10 +76,10 @@ public class ServerEventRepository {
   }
 
   private ServerEvent getServerEventFromResultSet(final ResultSet resultSet) throws SQLException {
-    final var id = resultSet.getLong("id");
-    final var statusName = resultSet.getString("status");
-    final var status = Status.valueOf(statusName.toUpperCase());
-    final var creationTime = resultSet.getObject("creation_time", LocalDateTime.class);
+    final long id = resultSet.getLong("id");
+    final String statusName = resultSet.getString("status");
+    final Status status = Status.valueOf(statusName.toUpperCase());
+    final LocalDateTime creationTime = resultSet.getObject("creation_time", LocalDateTime.class);
     return new ServerEvent(id, status, creationTime);
   }
 }

@@ -2,11 +2,13 @@ package com.maemresen.server.manager.cli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -31,10 +33,10 @@ public class DbConnection {
 
   public void executeFile(String filePath) throws SQLException, IOException {
     try (var connection = createConnection();
-        var statement = connection.createStatement();
-        var inputStream = DbConnection.class.getResourceAsStream(filePath);
-        var is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        var reader = new BufferedReader(is)) {
+         Statement statement = connection.createStatement();
+         InputStream inputStream = DbConnection.class.getResourceAsStream(filePath);
+         InputStreamReader is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+         BufferedReader reader = new BufferedReader(is)) {
       StringBuilder sql = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) {

@@ -131,8 +131,8 @@ class CommandServiceTest {
     @Test
     void shouldOutputLastEventAndUptime() throws SQLException {
 
-      final var uptimeString = "01:01:01";
-      try (final var mockedDateTimeUtils = mockStatic(DateTimeUtils.class)) {
+      final String uptimeString = "01:01:01";
+      try (final MockedStatic<DateTimeUtils> mockedDateTimeUtils = mockStatic(DateTimeUtils.class)) {
         mockedDateTimeUtils
             .when(() -> DateTimeUtils.formatDuration(any()))
             .thenReturn(uptimeString);
@@ -164,7 +164,7 @@ class CommandServiceTest {
 
       whenLatestEvent();
 
-      try (final var mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
         commandService.up();
 
         verify(serverEventRepository).findLatest();
@@ -187,7 +187,7 @@ class CommandServiceTest {
     void shouldSuccessfullyCreateEventsToStartTheServer()
         throws InterruptedException, SQLException {
       whenLatestEvent();
-      try (final var mockedRandomActionHelper =
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
           mockStatic(RandomActionHelper.class, Answers.CALLS_REAL_METHODS)) {
         doNothingWhenThrowRandomException(mockedRandomActionHelper);
 
@@ -215,7 +215,7 @@ class CommandServiceTest {
     @Test
     void shouldFailToStartTheServer() throws InterruptedException, SQLException {
       whenLatestEvent();
-      try (final var mockedRandomActionHelper =
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
           mockStatic(RandomActionHelper.class, Answers.CALLS_REAL_METHODS)) {
         doRandomExceptionWhenThrowRandomException(mockedRandomActionHelper);
 
@@ -250,7 +250,7 @@ class CommandServiceTest {
 
       whenLatestEvent();
 
-      try (final var mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
         commandService.down();
 
         verify(serverEventRepository).findLatest();
@@ -272,7 +272,7 @@ class CommandServiceTest {
     @Test
     void shouldSuccessfullyCreateEventsToStopTheServer() throws SQLException, InterruptedException {
       whenLatestEvent();
-      try (final var mockedRandomActionHelper =
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
           mockStatic(RandomActionHelper.class, Answers.CALLS_REAL_METHODS)) {
         doNothingWhenThrowRandomException(mockedRandomActionHelper);
 
@@ -300,7 +300,7 @@ class CommandServiceTest {
     @Test
     void shouldFailToStopTheServer() throws SQLException, InterruptedException {
       whenLatestEvent();
-      try (final var mockedRandomActionHelper =
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
           mockStatic(RandomActionHelper.class, Answers.CALLS_REAL_METHODS)) {
         doRandomExceptionWhenThrowRandomException(mockedRandomActionHelper);
 
