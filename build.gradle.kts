@@ -2,6 +2,7 @@ plugins {
     java
     alias(libs.plugins.spotless)
     id("jacoco-report-aggregation")
+    alias(libs.plugins.shadow)
 }
 
 spotless {
@@ -12,7 +13,7 @@ spotless {
 }
 
 tasks.processResources {
-    dependsOn(tasks.spotlessCheck)
+    dependsOn(tasks.spotlessApply, tasks.spotlessCheck)
 }
 
 repositories {
@@ -27,15 +28,20 @@ java {
 
 fun DependencyHandler.productionDeps() {
     implementation(libs.commons.cli)
-//    compileOnly("org.projectlombok:lombok")
-//    annotationProcessor("org.projectlombok:lombok")
-//    runtimeOnly("com.h2database:h2")
+    implementation(libs.h2database)
+    implementation(libs.logback.core)
+    implementation(libs.logback.classic)
+    implementation(libs.slf4j.api)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 fun DependencyHandler.testDeps() {
     testImplementation(platform(libs.junit))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
 }
 
 dependencies {

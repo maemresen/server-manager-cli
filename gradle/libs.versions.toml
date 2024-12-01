@@ -1,16 +1,23 @@
 [versions]
-spring-boot = "3.3.6"
-spring-dependency-management = "1.1.6"
 spotless = "6.25.0"
 google-java-format = "1.24.0"
 commons-cli = "1.9.0"
 junit = "5.11.3"
+lombok = "1.18.36"
+h2database = "2.2.220"
+shadow = "7.1.2"
+logback = "1.5.6"
+slf4j-api = "2.0.16"
 
 [libraries]
 commons-cli = { module = "commons-cli:commons-cli", version.ref = "commons-cli" }
 junit = { module = "org.junit:junit-bom", version.ref = "junit" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+h2database = { module = "com.h2database:h2", version.ref = "h2database" }
+logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j-api" }
 
 [plugins]
-spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
