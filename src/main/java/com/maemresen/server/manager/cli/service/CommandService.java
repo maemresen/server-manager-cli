@@ -5,6 +5,7 @@ import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
 import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.repository.ServerEventRepository;
+import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import com.maemresen.server.manager.cli.utils.RandomActionHelper;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -12,11 +13,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CommandService {
-  private final ServerEventRepository serverEventRepository = new ServerEventRepository();
+  private final ServerEventRepository serverEventRepository;
 
   public void status() throws SQLException {
     Optional<ServerEvent> latest = serverEventRepository.findLatest();
@@ -28,8 +31,8 @@ public class CommandService {
     ServerEvent serverEvent = latest.get();
     Status status = serverEvent.getStatus();
     if (status == Status.UP) {
-      Duration uptime = Duration.between(LocalDateTime.now(), serverEvent.getCreationTime()).abs();
-      log.info("{} {}", uptime, serverEvent.getStatus());
+      Duration uptime = Duration.between(serverEvent.getCreationTime(), LocalDateTime.now());
+      log.info("{} {}", DateTimeUtils.formatDuration(uptime), serverEvent.getStatus());
     } else {
       log.info("{}", serverEvent.getStatus());
     }
