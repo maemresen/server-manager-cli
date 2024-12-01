@@ -1,8 +1,5 @@
 plugins {
     java
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependency.management)
-
     alias(libs.plugins.spotless)
     id("jacoco-report-aggregation")
 }
@@ -29,18 +26,16 @@ java {
 }
 
 fun DependencyHandler.productionDeps() {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation(libs.commons.cli)
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-    runtimeOnly("com.h2database:h2")
+//    compileOnly("org.projectlombok:lombok")
+//    annotationProcessor("org.projectlombok:lombok")
+//    runtimeOnly("com.h2database:h2")
 }
 
 fun DependencyHandler.testDeps() {
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testCompileOnly("org.projectlombok:lombok")
+    testImplementation(platform(libs.junit))
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 dependencies {
