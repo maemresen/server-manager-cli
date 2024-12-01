@@ -1,5 +1,7 @@
 package com.maemresen.server.manager.cli.command;
 
+import com.maemresen.server.manager.cli.service.CommandService;
+import java.sql.SQLException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,14 +11,16 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
-@Getter
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractCommand implements Command {
 
   private final HelpFormatter helpFormatter = new HelpFormatter();
   private final Options options = createOptions();
-  private final String name;
+
+  @Getter private final String name;
+
+  protected final CommandService commandService;
 
   protected Options createOptions() {
     return new Options();
@@ -40,5 +44,6 @@ public abstract class AbstractCommand implements Command {
     helpFormatter.printHelp(name, options);
   }
 
-  protected abstract void handleCommandLine(CommandLine cmd) throws InterruptedException;
+  protected abstract void handleCommandLine(CommandLine cmd)
+      throws InterruptedException, SQLException;
 }

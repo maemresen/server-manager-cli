@@ -1,5 +1,6 @@
 package com.maemresen.server.manager.cli.service;
 
+import com.google.inject.Inject;
 import com.maemresen.server.manager.cli.exception.RandomServerException;
 import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
 import com.maemresen.server.manager.cli.model.entity.ServerEvent;
@@ -13,13 +14,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class CommandService {
   private final ServerEventRepository serverEventRepository;
+
+  @Inject
+  public CommandService(ServerEventRepository serverEventRepository) {
+    this.serverEventRepository = serverEventRepository;
+  }
 
   public void status() throws SQLException {
     Optional<ServerEvent> latest = serverEventRepository.findLatest();

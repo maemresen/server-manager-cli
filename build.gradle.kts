@@ -32,6 +32,7 @@ fun DependencyHandler.productionDeps() {
     implementation(libs.logback.core)
     implementation(libs.logback.classic)
     implementation(libs.slf4j.api)
+    implementation("com.google.inject:guice:7.0.0")
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
 }
