@@ -1,22 +1,18 @@
-package com.maemresen.server.manager.cli.service;
+package com.maemresen.server.manager.cli.utils;
 
 import com.maemresen.server.manager.cli.exception.RandomServerException;
-import com.maemresen.server.manager.cli.utils.ExecutionPauseUtils;
 import java.time.Duration;
 import java.util.function.Supplier;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 /**
  * Service to perform random actions such as introducing a random delay or throwing a random
  * exception based on a probability.
  *
- * <p>This service utilizes {@link RandomGeneratorService} to generate random values for its
- * operations.
+ * <p>This service utilizes {@link RandomValueUtils} to generate random values for its operations.
  */
-@RequiredArgsConstructor
-public class RandomActionService {
-
-  private final RandomGeneratorService randomGeneratorService = new RandomGeneratorService();
+@UtilityClass
+public class RandomActionHelper {
 
   /**
    * Causes the current thread to pause execution for a random number of seconds between the
@@ -26,9 +22,9 @@ public class RandomActionService {
    * @param maximumSeconds the maximum number of seconds to wait
    * @throws InterruptedException if the thread is interrupted while sleeping
    */
-  public void waitRandomSeconds(int minimumSeconds, int maximumSeconds)
+  public static void waitRandomSeconds(int minimumSeconds, int maximumSeconds)
       throws InterruptedException {
-    int secondsToWait = randomGeneratorService.randomIntBetween(minimumSeconds, maximumSeconds);
+    int secondsToWait = RandomValueUtils.randomIntBetween(minimumSeconds, maximumSeconds);
     ExecutionPauseUtils.delay(Duration.ofSeconds(secondsToWait));
   }
 
@@ -43,9 +39,9 @@ public class RandomActionService {
    * @param exceptionSupplier a supplier that provides the exception instance
    * @throws RandomServerException if the random condition matches the probability
    */
-  public void throwRandomException(
+  public static void throwRandomException(
       int probability, Supplier<? extends RandomServerException> exceptionSupplier) {
-    if (randomGeneratorService.randomBoolean(probability)) {
+    if (RandomValueUtils.randomBoolean(probability)) {
       throw exceptionSupplier.get();
     }
   }

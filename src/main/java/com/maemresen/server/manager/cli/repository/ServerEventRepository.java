@@ -15,7 +15,7 @@ public class ServerEventRepository {
 
   public void createNewEvent(Status status) throws SQLException {
     final var sql = "INSERT INTO SERVER_EVENT (STATUS, CREATION_TIME) VALUES (?1, ?2)";
-    try (final var statmement = DbConnection.getInstance().prepareStatement(sql)) {
+    try (final var statmement = DbConnection.getConnection().prepareStatement(sql)) {
       statmement.setString(1, status.toString());
       statmement.setObject(2, LocalDateTime.now());
       statmement.execute();
@@ -26,7 +26,7 @@ public class ServerEventRepository {
     final var sql =
         "SELECT id, status, creation_time FROM SERVER_EVENT ORDER BY creation_time DESC LIMIT 1";
 
-    try (final var statement = DbConnection.getInstance().prepareStatement(sql)) {
+    try (final var statement = DbConnection.getConnection().prepareStatement(sql)) {
       statement.execute();
       try (final var resultSet = statement.getResultSet()) {
         if (resultSet.next()) {
@@ -52,7 +52,7 @@ public class ServerEventRepository {
 
     List<ServerEvent> results = new ArrayList<>();
 
-    try (final var pstmt = DbConnection.getInstance().prepareStatement(sql)) {
+    try (final var pstmt = DbConnection.getConnection().prepareStatement(sql)) {
       LocalDateTime fromDate = historySearchDto.getFromDate();
       LocalDateTime toDate = historySearchDto.getToDate();
       final var statusName =

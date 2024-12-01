@@ -5,6 +5,7 @@ import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
 import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.repository.ServerEventRepository;
+import com.maemresen.server.manager.cli.utils.RandomActionHelper;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommandService {
   private final ServerEventRepository serverEventRepository = new ServerEventRepository();
-  private final RandomActionService randomActionService = new RandomActionService();
 
   public void status() throws SQLException {
     Optional<ServerEvent> latest = serverEventRepository.findLatest();
@@ -43,9 +43,9 @@ public class CommandService {
 
     serverEventRepository.createNewEvent(Status.STARTING);
     log.info("Starting...");
-    randomActionService.waitRandomSeconds(3, 10);
+    RandomActionHelper.waitRandomSeconds(3, 10);
     try {
-      randomActionService.throwRandomException(
+      RandomActionHelper.throwRandomException(
           20, () -> new RandomServerException("Failed to starting server."));
       serverEventRepository.createNewEvent(Status.UP);
       log.info("Started.");
@@ -62,9 +62,9 @@ public class CommandService {
 
     serverEventRepository.createNewEvent(Status.STOPPING);
     log.info("Stopping...");
-    randomActionService.waitRandomSeconds(3, 10);
+    RandomActionHelper.waitRandomSeconds(3, 10);
     try {
-      randomActionService.throwRandomException(
+      RandomActionHelper.throwRandomException(
           20, () -> new RandomServerException("Failed to starting server."));
       serverEventRepository.createNewEvent(Status.DOWN);
       log.info("Stopped.");

@@ -18,19 +18,23 @@ public class DbConnection {
 
   private static DbConnection INSTANCE;
 
-  public static Connection getInstance() throws SQLException {
+  public static synchronized DbConnection getInstance() {
     if (INSTANCE == null) {
       INSTANCE = new DbConnection();
     }
-    return INSTANCE.createConnection();
+    return INSTANCE;
+  }
+
+  public static Connection getConnection() throws SQLException {
+    return getInstance().createConnection();
   }
 
   public void executeFile(String filePath) throws SQLException, IOException {
     try (var connection = createConnection();
-         var statement = connection.createStatement();
-         var inputStream = DbConnection.class.getResourceAsStream(filePath);
-         var is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-         var reader = new BufferedReader(is)) {
+        var statement = connection.createStatement();
+        var inputStream = DbConnection.class.getResourceAsStream(filePath);
+        var is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        var reader = new BufferedReader(is)) {
       StringBuilder sql = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) {

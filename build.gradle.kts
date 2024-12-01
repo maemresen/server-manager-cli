@@ -37,6 +37,8 @@ fun DependencyHandler.productionDeps() {
 }
 
 fun DependencyHandler.testDeps() {
+    testImplementation(libs.assertj)
+    testImplementation(libs.mockito)
     testImplementation(platform(libs.junit))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
