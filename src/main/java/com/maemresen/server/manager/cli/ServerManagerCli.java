@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ServerManagerCli {
   public static void main(String[] args) throws Exception {
     final var commandService = new CommandService();
-    final var databaseConnector = DatabaseConnection.getInstance();
+    final var databaseConnector = DbConnection.getInstance();
     databaseConnector.executeFile("/scheme.sql");
     commandService.up();
     commandService.up();

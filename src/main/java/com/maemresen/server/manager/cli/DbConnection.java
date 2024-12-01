@@ -11,30 +11,26 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DatabaseConnection {
+public class DbConnection {
   private static final String JDBC_URL = "jdbc:h2:file:./data/server-status;AUTO_SERVER=TRUE";
   private static final String USERNAME = "sa";
   private static final String PASSWORD = "";
 
-  private static DatabaseConnection INSTANCE;
+  private static DbConnection INSTANCE;
 
-  public static DatabaseConnection getInstance() {
+  public static Connection getInstance() throws SQLException {
     if (INSTANCE == null) {
-      INSTANCE = new DatabaseConnection();
+      INSTANCE = new DbConnection();
     }
-    return INSTANCE;
-  }
-
-  public Connection getConnection() throws SQLException {
-    return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+    return INSTANCE.createConnection();
   }
 
   public void executeFile(String filePath) throws SQLException, IOException {
-    try (var connection = getConnection();
-        var statement = connection.createStatement();
-        var inputStream = DatabaseConnection.class.getResourceAsStream(filePath);
-        var is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        var reader = new BufferedReader(is)) {
+    try (var connection = createConnection();
+         var statement = connection.createStatement();
+         var inputStream = DbConnection.class.getResourceAsStream(filePath);
+         var is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+         var reader = new BufferedReader(is)) {
       StringBuilder sql = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) {
@@ -46,5 +42,9 @@ public class DatabaseConnection {
         }
       }
     }
+  }
+
+  private Connection createConnection() throws SQLException {
+    return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
   }
 }
