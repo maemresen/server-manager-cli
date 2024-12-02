@@ -15,6 +15,6 @@ public class HelpCommand extends AbstractCommand {
 
   @Override
   protected void handleCommandLine(CommandLine cmd) {
-    log.info("Usage: help|status|up|down|searchHistory [-h]");
+    log.info("Usage: help|status|up|down|history [-h]");
   }
 }

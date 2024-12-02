@@ -25,7 +25,7 @@ public class HistoryCommand extends AbstractCommand {
 
   @Inject
   public HistoryCommand(CommandService commandService) {
-    super("searchHistory", commandService);
+    super("history", commandService);
   }
 
   @Override
