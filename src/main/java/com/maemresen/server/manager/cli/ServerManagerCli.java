@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServerManagerCli {
   public static void main(String[] args) throws InterruptedException, SQLException, IOException {
-    DbConnection.getInstance().executeFile("/scheme.sql");
+    DbConnection.executeFile("/scheme.sql");
     Injector injector = Guice.createInjector(new ApplicationModule());
 
     try {

@@ -22,7 +22,7 @@ class StatusCommandTest {
   @InjectMocks private StatusCommand command;
 
   @Test
-  void shouldRunCommand() throws InterruptedException, SQLException {
+  void shouldRunCommand() throws SQLException {
     command.handleCommandLine(mockCmd);
 
     verify(commandService).status();

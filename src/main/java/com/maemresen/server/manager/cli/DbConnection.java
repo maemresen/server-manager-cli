@@ -16,25 +16,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DbConnection {
 
-  private static final String FILE_PATH = EnvUtils.getEnv("H2_DB_PATH", "./data/server-status");
-  private static final String JDBC_URL = "jdbc:h2:file:%s;AUTO_SERVER=TRUE".formatted(FILE_PATH);
-  private static final String USERNAME = "sa";
-  private static final String PASSWORD = "";
+  private static final String DEFAULT_JDBC = "jdbc:h2:file:./data/server-status;AUTO_SERVER=TRUE";
+  private static final String DEFAULT_DB_USER = "sa";
+  private static final String DEFAULT_DB_PASS = "";
 
-  private static DbConnection INSTANCE;
-
-  public static synchronized DbConnection getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new DbConnection();
-    }
-    return INSTANCE;
-  }
+  private static final String JDBC = EnvUtils.getEnv("JDBC", DEFAULT_JDBC);
+  private static final String DB_USERNAME = EnvUtils.getEnv("DB_USER", DEFAULT_DB_USER);
+  private static final String DB_PASSWORD = EnvUtils.getEnv("DB_PASS", DEFAULT_DB_PASS);
 
   public static Connection getConnection() throws SQLException {
-    return getInstance().createConnection();
+    return createConnection();
   }
 
-  public void executeFile(String filePath) throws SQLException, IOException {
+  public static void executeFile(String filePath) throws SQLException, IOException {
     try (var connection = createConnection();
         Statement statement = connection.createStatement();
         InputStream inputStream = DbConnection.class.getResourceAsStream(filePath);
@@ -53,7 +47,7 @@ public class DbConnection {
     }
   }
 
-  private Connection createConnection() throws SQLException {
-    return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+  private static Connection createConnection() throws SQLException {
+    return DriverManager.getConnection(JDBC, DB_USERNAME, DB_PASSWORD);
   }
 }
