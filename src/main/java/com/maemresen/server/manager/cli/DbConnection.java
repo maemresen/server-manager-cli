@@ -1,5 +1,6 @@
 package com.maemresen.server.manager.cli;
 
+import com.maemresen.server.manager.cli.utils.EnvUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +15,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DbConnection {
-  private static final String JDBC_URL = "jdbc:h2:file:./data/server-status;AUTO_SERVER=TRUE";
+
+  private static final String FILE_PATH = EnvUtils.getEnv("H2_DB_PATH", "./data/server-status");
+  private static final String JDBC_URL = "jdbc:h2:file:%s;AUTO_SERVER=TRUE".formatted(FILE_PATH);
   private static final String USERNAME = "sa";
   private static final String PASSWORD = "";
 
