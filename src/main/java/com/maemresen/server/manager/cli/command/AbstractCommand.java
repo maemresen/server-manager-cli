@@ -1,7 +1,9 @@
 package com.maemresen.server.manager.cli.command;
 
 import com.maemresen.server.manager.cli.service.CommandService;
+import com.maemresen.server.manager.cli.utils.CmdUtils;
 import java.sql.SQLException;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
@@ -38,7 +40,12 @@ public abstract class AbstractCommand implements Command {
     CommandLineParser parser = new DefaultParser();
     try {
       CommandLine cmd = parser.parse(options, args);
-      handleCommandLine(cmd);
+      Optional<Boolean> help = CmdUtils.getBooleanOption(cmd, "h");
+      if (help.isPresent()) {
+        printHelp();
+      } else {
+        handleCommandLine(cmd);
+      }
     } catch (InterruptedException interruptedException) {
       throw interruptedException;
     } catch (Exception exception) {

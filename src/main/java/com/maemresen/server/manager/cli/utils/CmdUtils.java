@@ -22,8 +22,8 @@ public class CmdUtils {
     return getOption(cmd, option, value -> LocalDate.parse(value, DATE_PATTERN));
   }
 
-  public static Optional<String> getStringOption(CommandLine cmd, String option) {
-    return getOption(cmd, option, Function.identity());
+  public static Optional<Boolean> getBooleanOption(CommandLine cmd, String option) {
+    return getOption(cmd, option, value -> true);
   }
 
   public static <E extends Enum<E>> Optional<E> getEnumOption(

@@ -91,7 +91,7 @@ public class CommandService {
     serverEvents.forEach(
         serverEvent -> {
           String formattedTime = serverEvent.getCreationTime().format(formatter);
-          log.info("| {} | {}", formattedTime, serverEvent.getStatus());
+          log.info("{} {}", formattedTime, serverEvent.getStatus());
         });
   }
 

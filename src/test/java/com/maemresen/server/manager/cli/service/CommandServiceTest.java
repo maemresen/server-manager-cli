@@ -93,8 +93,6 @@ class CommandServiceTest {
 
   @Nested
   class StatusCommandTest {
-    // mockStatic(RandomActionHelper.class)
-
     @Test
     void shouldOutputNoHistory() throws SQLException {
       whenLatestEvent();
@@ -394,7 +392,7 @@ class CommandServiceTest {
     private String getExpectedLogMessage(Status status, LocalDateTime creationTime) {
       String formattedTime =
           creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-      return String.format("| %s | %s", formattedTime, status);
+      return String.format("%s %s", formattedTime, status);
     }
   }
 }

@@ -8,6 +8,8 @@ import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.service.CommandService;
 import com.maemresen.server.manager.cli.utils.CmdUtils;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -25,7 +27,14 @@ public class HistoryCommand extends AbstractCommand {
     options.addOption("f", "from", true, "yyyy-mm-dd");
     options.addOption("t", "to", true, "yyyy-mm-dd");
     options.addOption("o", "sort", true, "asc|desc");
-    options.addOption("s", "status", true, "up|down|stopping|starting");
+    options.addOption(
+        "s",
+        "status",
+        true,
+        Arrays.stream(Status.values())
+            .map(Enum::name)
+            .map(String::toLowerCase)
+            .collect(Collectors.joining("|")));
   }
 
   @Override

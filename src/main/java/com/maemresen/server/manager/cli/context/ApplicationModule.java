@@ -5,6 +5,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.maemresen.server.manager.cli.command.Command;
 import com.maemresen.server.manager.cli.command.CommandFactory;
 import com.maemresen.server.manager.cli.command.impl.DownCommand;
+import com.maemresen.server.manager.cli.command.impl.HelpCommand;
 import com.maemresen.server.manager.cli.command.impl.HistoryCommand;
 import com.maemresen.server.manager.cli.command.impl.StatusCommand;
 import com.maemresen.server.manager.cli.command.impl.UpCommand;
@@ -23,5 +24,6 @@ public class ApplicationModule extends AbstractModule {
     commandBinder.addBinding().to(StatusCommand.class);
     commandBinder.addBinding().to(UpCommand.class);
     commandBinder.addBinding().to(DownCommand.class);
+    commandBinder.addBinding().to(HelpCommand.class);
   }
 }

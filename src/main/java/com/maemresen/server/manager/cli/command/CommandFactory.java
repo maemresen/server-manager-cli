@@ -1,6 +1,7 @@
 package com.maemresen.server.manager.cli.command;
 
 import com.google.inject.Inject;
+import com.maemresen.server.manager.cli.exception.CommandNotFoundException;
 import java.util.Set;
 
 public class CommandFactory {
@@ -16,6 +17,6 @@ public class CommandFactory {
     return commands.stream()
         .filter(x -> x.getName().equals(commandName))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Unknown command: " + commandName));
+        .orElseThrow(() -> new CommandNotFoundException("Unknown command: " + commandName));
   }
 }
