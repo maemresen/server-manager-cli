@@ -13,7 +13,7 @@ spotless {
 }
 
 tasks.processResources {
-    dependsOn(tasks.spotlessApply, tasks.spotlessCheck)
+    dependsOn(tasks.spotlessCheck)
 }
 
 repositories {
