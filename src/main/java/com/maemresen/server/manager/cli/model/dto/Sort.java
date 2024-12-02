@@ -1,6 +1,6 @@
 package com.maemresen.server.manager.cli.model.dto;
 
-public enum SortDirection {
+public enum Sort {
   ASC,
   DESC
 }

@@ -132,7 +132,8 @@ class CommandServiceTest {
     void shouldOutputLastEventAndUptime() throws SQLException {
 
       final String uptimeString = "01:01:01";
-      try (final MockedStatic<DateTimeUtils> mockedDateTimeUtils = mockStatic(DateTimeUtils.class)) {
+      try (final MockedStatic<DateTimeUtils> mockedDateTimeUtils =
+          mockStatic(DateTimeUtils.class)) {
         mockedDateTimeUtils
             .when(() -> DateTimeUtils.formatDuration(any()))
             .thenReturn(uptimeString);
@@ -164,7 +165,8 @@ class CommandServiceTest {
 
       whenLatestEvent();
 
-      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
+          mockStatic(RandomActionHelper.class)) {
         commandService.up();
 
         verify(serverEventRepository).findLatest();
@@ -250,7 +252,8 @@ class CommandServiceTest {
 
       whenLatestEvent();
 
-      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper = mockStatic(RandomActionHelper.class)) {
+      try (final MockedStatic<RandomActionHelper> mockedRandomActionHelper =
+          mockStatic(RandomActionHelper.class)) {
         commandService.down();
 
         verify(serverEventRepository).findLatest();
@@ -391,13 +394,7 @@ class CommandServiceTest {
     private String getExpectedLogMessage(Status status, LocalDateTime creationTime) {
       String formattedTime =
           creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-      return switch (status) {
-        case UP -> String.format("Server is UP since %s", formattedTime);
-        case DOWN -> String.format("Server went DOWN at %s", formattedTime);
-        case STARTING -> String.format("Server is STARTING as of %s", formattedTime);
-        case STOPPING -> String.format("Server is STOPPING as of %s", formattedTime);
-        case FAILED -> String.format("Server FAILED at %s", formattedTime);
-      };
+      return String.format("| %s | %s", formattedTime, status);
     }
   }
 }

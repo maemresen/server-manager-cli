@@ -7,6 +7,7 @@ import com.maemresen.server.manager.cli.model.entity.Status;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,7 @@ public class ServerEventRepository {
   }
 
   public List<ServerEvent> searchHistory(SearchHistoryDto historySearchDto) throws SQLException {
-    String sortOrder =
-        Optional.ofNullable(historySearchDto.getSortDirection()).map(Enum::name).orElse(null);
+    String sortOrder = Optional.ofNullable(historySearchDto.getSort()).map(Enum::name).orElse(null);
     String sql =
         "SELECT id, creation_time, status "
             + "FROM server_event "
@@ -54,8 +54,8 @@ public class ServerEventRepository {
     List<ServerEvent> results = new ArrayList<>();
 
     try (final PreparedStatement pstmt = DbConnection.getConnection().prepareStatement(sql)) {
-      LocalDateTime fromDate = historySearchDto.getFromDate();
-      LocalDateTime toDate = historySearchDto.getToDate();
+      LocalDate fromDate = historySearchDto.getFromDate();
+      LocalDate toDate = historySearchDto.getToDate();
       final String statusName =
           Optional.ofNullable(historySearchDto.getStatus()).map(Enum::name).orElse(null);
       pstmt.setObject(1, fromDate);

@@ -3,6 +3,12 @@ package com.maemresen.server.manager.cli.command.impl;
 import com.google.inject.Inject;
 import com.maemresen.server.manager.cli.command.AbstractCommand;
 import com.maemresen.server.manager.cli.service.CommandService;
+import com.maemresen.server.manager.cli.utils.CmdUtils;
+import com.maemresen.server.manager.cli.utils.ExecutionPauseUtils;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -15,14 +21,24 @@ public class UpCommand extends AbstractCommand {
   }
 
   @Override
-  protected Options createOptions() {
-    Options options = new Options();
+  protected void configureOptions(Options options) {
     options.addOption("b", "before", true, "before the command");
-    return options;
   }
 
   @Override
-  protected void handleCommandLine(CommandLine cmd) throws InterruptedException {
-    throw new UnsupportedOperationException("Up command is not implemented yet.");
+  protected void handleCommandLine(CommandLine cmd) throws InterruptedException, SQLException {
+    commandService.up();
+    Optional<LocalDateTime> before = CmdUtils.getDateTimeOption(cmd, "b");
+    if (before.isPresent()) {
+      waitAndDownAfter(before.get());
+    }
+  }
+
+  private void waitAndDownAfter(LocalDateTime before) throws InterruptedException, SQLException {
+    Duration durationToWaitDown = Duration.between(LocalDateTime.now(), before);
+    if (durationToWaitDown.isPositive()) {
+      ExecutionPauseUtils.delay(durationToWaitDown);
+    }
+    commandService.down();
   }
 }

@@ -91,19 +91,8 @@ public class CommandService {
     serverEvents.forEach(
         serverEvent -> {
           String formattedTime = serverEvent.getCreationTime().format(formatter);
-          String statusMessage = formatStatusLog(serverEvent.getStatus(), formattedTime);
-          log.info(statusMessage);
+          log.info("| {} | {}", formattedTime, serverEvent.getStatus());
         });
-  }
-
-  private String formatStatusLog(Status status, String formattedTime) {
-    return switch (status) {
-      case UP -> String.format("Server is UP since %s", formattedTime);
-      case DOWN -> String.format("Server went DOWN at %s", formattedTime);
-      case STARTING -> String.format("Server is STARTING as of %s", formattedTime);
-      case STOPPING -> String.format("Server is STOPPING as of %s", formattedTime);
-      case FAILED -> String.format("Server FAILED at %s", formattedTime);
-    };
   }
 
   private boolean isLatestStatus(Status status) throws SQLException {

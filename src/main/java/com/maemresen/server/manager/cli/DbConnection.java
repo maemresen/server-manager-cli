@@ -33,10 +33,10 @@ public class DbConnection {
 
   public void executeFile(String filePath) throws SQLException, IOException {
     try (var connection = createConnection();
-         Statement statement = connection.createStatement();
-         InputStream inputStream = DbConnection.class.getResourceAsStream(filePath);
-         InputStreamReader is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-         BufferedReader reader = new BufferedReader(is)) {
+        Statement statement = connection.createStatement();
+        InputStream inputStream = DbConnection.class.getResourceAsStream(filePath);
+        InputStreamReader is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(is)) {
       StringBuilder sql = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) {
