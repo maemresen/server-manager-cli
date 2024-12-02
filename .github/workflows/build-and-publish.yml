@@ -25,6 +25,9 @@ jobs:
       - name: Build JAR
         run: ./gradlew clean build --no-daemon
 
+      - name: Build JAR
+        run: ./gradlew clean integrationTest --no-daemon
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
