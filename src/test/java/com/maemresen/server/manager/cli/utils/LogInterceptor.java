@@ -22,7 +22,7 @@ public class LogInterceptor {
     final Logger logger = (Logger) LoggerFactory.getLogger(clazz);
     final ListAppender<ILoggingEvent> testLogAppender = new ListAppender<>();
     testLogAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
-    logger.setLevel(LogLevelUtil.slf4jToLogback(level));
+    logger.setLevel(ch.qos.logback.classic.Level.convertAnSLF4JLevel(level));
     logger.addAppender(testLogAppender);
     return new LogInterceptor(testLogAppender);
   }
