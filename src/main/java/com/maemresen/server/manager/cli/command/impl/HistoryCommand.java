@@ -7,6 +7,7 @@ import com.maemresen.server.manager.cli.model.dto.Sort;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.service.CommandService;
 import com.maemresen.server.manager.cli.utils.CmdUtils;
+import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -17,18 +18,23 @@ import org.apache.commons.cli.Options;
 @Slf4j
 public class HistoryCommand extends AbstractCommand {
 
+  public static final String PARAMETER_FROM = "f";
+  public static final String PARAMETER_TO = "t";
+  public static final String PARAMETER_SORT = "o";
+  public static final String PARAMETER_STATUS = "s";
+
   @Inject
   public HistoryCommand(CommandService commandService) {
-    super("history", commandService);
+    super("searchHistory", commandService);
   }
 
   @Override
   protected void configureOptions(Options options) {
-    options.addOption("f", "from", true, "yyyy-mm-dd");
-    options.addOption("t", "to", true, "yyyy-mm-dd");
-    options.addOption("o", "sort", true, "asc|desc");
+    options.addOption(PARAMETER_FROM, "from", true, "yyyy-mm-dd");
+    options.addOption(PARAMETER_TO, "to", true, "yyyy-mm-dd");
+    options.addOption(PARAMETER_SORT, "sort", true, "asc|desc");
     options.addOption(
-        "s",
+        PARAMETER_STATUS,
         "status",
         true,
         Arrays.stream(Status.values())
@@ -41,12 +47,15 @@ public class HistoryCommand extends AbstractCommand {
   protected void handleCommandLine(CommandLine cmd) throws SQLException {
     SearchHistoryDto searchHistoryDto = new SearchHistoryDto();
 
-    CmdUtils.getDateOption(cmd, "f").ifPresent(searchHistoryDto::setFromDate);
-    CmdUtils.getDateOption(cmd, "t").ifPresent(searchHistoryDto::setToDate);
-    CmdUtils.getEnumOption(cmd, "o", Sort.class)
+    CmdUtils.getParameter(cmd, PARAMETER_FROM, DateTimeUtils::parseDate)
+        .ifPresent(searchHistoryDto::setFromDate);
+    CmdUtils.getParameter(cmd, PARAMETER_TO, DateTimeUtils::parseDate)
+        .ifPresent(searchHistoryDto::setToDate);
+    CmdUtils.getEnumParameter(cmd, PARAMETER_SORT, Sort.class)
         .ifPresentOrElse(searchHistoryDto::setSort, () -> searchHistoryDto.setSort(Sort.DESC));
-    CmdUtils.getEnumOption(cmd, "s", Status.class).ifPresent(searchHistoryDto::setStatus);
+    CmdUtils.getEnumParameter(cmd, PARAMETER_STATUS, Status.class)
+        .ifPresent(searchHistoryDto::setStatus);
 
-    commandService.history(searchHistoryDto);
+    commandService.searchHistory(searchHistoryDto);
   }
 }

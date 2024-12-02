@@ -17,8 +17,8 @@ import org.apache.commons.cli.ParseException;
 public abstract class AbstractCommand implements Command {
 
   private final HelpFormatter helpFormatter = new HelpFormatter();
-  private final Options options;
 
+  @Getter private final Options options;
   @Getter private final String name;
 
   protected final CommandService commandService;
@@ -40,7 +40,7 @@ public abstract class AbstractCommand implements Command {
     CommandLineParser parser = new DefaultParser();
     try {
       CommandLine cmd = parser.parse(options, args);
-      Optional<Boolean> help = CmdUtils.getBooleanOption(cmd, "h");
+      Optional<Boolean> help = CmdUtils.getBooleanParameter(cmd, "h");
       if (help.isPresent()) {
         printHelp();
       } else {

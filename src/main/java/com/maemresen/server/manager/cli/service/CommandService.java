@@ -11,7 +11,6 @@ import com.maemresen.server.manager.cli.utils.RandomActionHelper;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ public class CommandService {
   public void status() throws SQLException {
     Optional<ServerEvent> latest = serverEventRepository.findLatest();
     if (latest.isEmpty()) {
-      log.info("No history found for the server.");
+      log.info("No searchHistory found for the server.");
       return;
     }
 
@@ -80,17 +79,17 @@ public class CommandService {
     }
   }
 
-  public void history(SearchHistoryDto searchHistoryDto) throws SQLException {
+  public void searchHistory(SearchHistoryDto searchHistoryDto) throws SQLException {
     List<ServerEvent> serverEvents = serverEventRepository.searchHistory(searchHistoryDto);
     if (serverEvents.isEmpty()) {
       log.info("No events found.");
       return;
     }
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     serverEvents.forEach(
         serverEvent -> {
-          String formattedTime = serverEvent.getCreationTime().format(formatter);
+          String formattedTime =
+              DateTimeUtils.formatDateTimeWithSeconds(serverEvent.getCreationTime());
           log.info("{} {}", formattedTime, serverEvent.getStatus());
         });
   }

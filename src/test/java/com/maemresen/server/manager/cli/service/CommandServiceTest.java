@@ -105,7 +105,7 @@ class CommandServiceTest {
           .hasSize(1)
           .element(0)
           .extracting(ILoggingEvent::getFormattedMessage)
-          .isEqualTo("No history found for the server.");
+          .isEqualTo("No searchHistory found for the server.");
     }
 
     @ParameterizedTest
@@ -354,7 +354,7 @@ class CommandServiceTest {
     void shouldOutputNoEventsFound() throws SQLException {
       whenSearchHistory();
 
-      commandService.history(searchHistoryDto);
+      commandService.searchHistory(searchHistoryDto);
 
       verifySearchHistory();
 
@@ -372,7 +372,7 @@ class CommandServiceTest {
       addEventToHistory(serverEvent);
       whenSearchHistory();
 
-      commandService.history(searchHistoryDto);
+      commandService.searchHistory(searchHistoryDto);
 
       verifySearchHistory();
 

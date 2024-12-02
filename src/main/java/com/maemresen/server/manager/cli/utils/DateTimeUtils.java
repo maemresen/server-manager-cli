@@ -1,12 +1,24 @@
 package com.maemresen.server.manager.cli.utils;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.experimental.UtilityClass;
 
-/** Utility class for working with {@link Duration} and {@link LocalDateTime} objects. */
+/**
+ * Utility class for working with {@link Duration}, {@link LocalDate}, and {@link LocalDateTime}
+ * objects. Provides methods for parsing and formatting date and time objects.
+ */
 @UtilityClass
 public class DateTimeUtils {
+
+  private static final DateTimeFormatter DATE_PARAMETER_PATTERN =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  private static final DateTimeFormatter DATE_TIME_PARAMETER_PATTERN =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+  private static final DateTimeFormatter DATE_TIME_WITH_SECONDS_PATTERN =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   /**
    * Formats a {@link Duration} into a string in the format "hh:mm:ss".
@@ -24,5 +36,40 @@ public class DateTimeUtils {
     long seconds = duration.toSecondsPart();
 
     return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+  }
+
+  /**
+   * Formats a {@link LocalDateTime} into a string using the format "yyyy-MM-dd HH:mm".
+   *
+   * @param creationTime the {@link LocalDateTime} to format
+   * @return the formatted date-time string
+   * @throws NullPointerException if the creationTime is null
+   */
+  public static String formatDateTimeWithSeconds(LocalDateTime creationTime) {
+    return creationTime.format(DATE_TIME_WITH_SECONDS_PATTERN);
+  }
+
+  /**
+   * Parses a string into a {@link LocalDate} using the format "yyyy-MM-dd".
+   *
+   * @param dateString the date string to parse
+   * @return the parsed {@link LocalDate} object
+   * @throws NullPointerException if the dateString is null
+   * @throws java.time.format.DateTimeParseException if the dateString cannot be parsed
+   */
+  public static LocalDate parseDate(String dateString) {
+    return LocalDate.parse(dateString, DATE_PARAMETER_PATTERN);
+  }
+
+  /**
+   * Parses a string into a {@link LocalDateTime} using the format "yyyy-MM-dd HH:mm".
+   *
+   * @param dateString the date-time string to parse
+   * @return the parsed {@link LocalDateTime} object
+   * @throws NullPointerException if the dateString is null
+   * @throws java.time.format.DateTimeParseException if the dateString cannot be parsed
+   */
+  public static LocalDateTime parseDateTimeWithoutSeconds(String dateString) {
+    return LocalDateTime.parse(dateString, DATE_TIME_PARAMETER_PATTERN);
   }
 }

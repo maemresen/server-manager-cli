@@ -1,8 +1,5 @@
 package com.maemresen.server.manager.cli.utils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
@@ -10,31 +7,19 @@ import org.apache.commons.cli.CommandLine;
 
 @UtilityClass
 public class CmdUtils {
-  private static final DateTimeFormatter DATE_TIME_PATTERN =
-      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-  private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-  public static Optional<LocalDateTime> getDateTimeOption(CommandLine cmd, String option) {
-    return getOption(cmd, option, value -> LocalDateTime.parse(value, DATE_TIME_PATTERN));
+  public static Optional<Boolean> getBooleanParameter(CommandLine cmd, String parameter) {
+    return getParameter(cmd, parameter, value -> true);
   }
 
-  public static Optional<LocalDate> getDateOption(CommandLine cmd, String option) {
-    return getOption(cmd, option, value -> LocalDate.parse(value, DATE_PATTERN));
+  public static <E extends Enum<E>> Optional<E> getEnumParameter(
+      CommandLine cmd, String parameter, Class<E> enumClass) {
+    return getParameter(cmd, parameter, value -> Enum.valueOf(enumClass, value.toUpperCase()));
   }
 
-  public static Optional<Boolean> getBooleanOption(CommandLine cmd, String option) {
-    return getOption(cmd, option, value -> true);
-  }
-
-  public static <E extends Enum<E>> Optional<E> getEnumOption(
-      CommandLine cmd, String option, Class<E> enumClass) {
-    return getOption(cmd, option, value -> Enum.valueOf(enumClass, value.toUpperCase()));
-  }
-
-  public static <T> Optional<T> getOption(
-      CommandLine cmd, String option, Function<String, T> mapper) {
-    if (cmd.hasOption(option)) {
-      String optionValue = cmd.getOptionValue(option);
+  public static <T> Optional<T> getParameter(
+      CommandLine cmd, String parameter, Function<String, T> mapper) {
+    if (cmd.hasOption(parameter)) {
+      String optionValue = cmd.getOptionValue(parameter);
       return Optional.of(mapper.apply(optionValue));
     }
     return Optional.empty();
