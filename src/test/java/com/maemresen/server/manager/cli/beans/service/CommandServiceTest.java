@@ -66,12 +66,12 @@ class CommandServiceTest {
     latestServerEvent = null;
 
     Properties properties = new Properties();
-    properties.setProperty(UpCommandProps.RANDOM_WAIT_SECONDS_MIN.getKey(), "0");
-    properties.setProperty(UpCommandProps.RANDOM_WAIT_SECONDS_MAX.getKey(), "0");
-    properties.setProperty(UpCommandProps.FAILURE_PROBABILITY.getKey(), "0");
-    properties.setProperty(DownCommandProps.RANDOM_WAIT_SECONDS_MIN.getKey(), "0");
-    properties.setProperty(DownCommandProps.RANDOM_WAIT_SECONDS_MAX.getKey(), "0");
-    properties.setProperty(DownCommandProps.FAILURE_PROBABILITY.getKey(), "0");
+    properties.setProperty(UpCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
+    properties.setProperty(UpCommandProps.RANDOM_WAIT_SECONDS_MAX, "0");
+    properties.setProperty(UpCommandProps.FAILURE_PROBABILITY, "0");
+    properties.setProperty(DownCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
+    properties.setProperty(DownCommandProps.RANDOM_WAIT_SECONDS_MAX, "0");
+    properties.setProperty(DownCommandProps.FAILURE_PROBABILITY, "0");
 
     appProps = new AppProps(properties);
     commandService = new CommandService(serverEventRepository, appProps);

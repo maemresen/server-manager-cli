@@ -1,14 +1,10 @@
 package com.maemresen.server.manager.cli.utils.properties;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@RequiredArgsConstructor
-@Getter
-public enum DbProps implements Property {
-  JDBC_URL("jdbc.url"),
-  JDBC_USERNAME("jdbc.username"),
-  JDBC_PASSWORD("jdbc.password");
-
-  private final String key;
+@UtilityClass
+public class DbProps {
+  public static final String JDBC_URL = "jdbc.url";
+  public static final String JDBC_USERNAME = "jdbc.username";
+  public static final String JDBC_PASSWORD = "jdbc.password";
 }
