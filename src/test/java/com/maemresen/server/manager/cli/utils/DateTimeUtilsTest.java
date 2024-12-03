@@ -28,6 +28,14 @@ class DateTimeUtilsTest {
     }
 
     @Test
+    void shouldFormatDurationForDurationExceeding99Hours() {
+      Duration duration = Duration.ofHours(120).plusMinutes(15).plusSeconds(45);
+      String formattedDuration = DateTimeUtils.formatDuration(duration);
+
+      assertThat(formattedDuration).isEqualTo("120:15:45");
+    }
+
+    @Test
     void shouldThrowNullPointerExceptionWhenDurationIsNull() {
       assertThatThrownBy(() -> DateTimeUtils.formatDuration(null))
           .isInstanceOf(NullPointerException.class)
