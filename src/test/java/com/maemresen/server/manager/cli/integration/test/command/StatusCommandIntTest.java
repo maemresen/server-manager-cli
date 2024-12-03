@@ -21,7 +21,7 @@ class StatusCommandIntTest extends BaseApplicationIntTest {
   void shouldLatestStatus() throws SQLException, IOException, InterruptedException {
     application.run("up");
 
-    LOG_INTERCEPTOR.reset();
+    resetLogger();
     application.run("status");
     assertThat(LOG_INTERCEPTOR.getLoggedEvents())
         .element(0)
@@ -30,7 +30,8 @@ class StatusCommandIntTest extends BaseApplicationIntTest {
         .matches(DURATION_STRING_PATTERN);
 
     application.run("down");
-    LOG_INTERCEPTOR.reset();
+    resetLogger();
+
     application.run("status");
     assertThat(LOG_INTERCEPTOR.getLoggedEvents())
         .element(0)
@@ -47,7 +48,7 @@ class StatusCommandIntTest extends BaseApplicationIntTest {
   void shouldShowLatestFailure() throws SQLException, IOException, InterruptedException {
     application.run("up");
 
-    LOG_INTERCEPTOR.reset();
+    resetLogger();
     application.run("status");
     assertThat(LOG_INTERCEPTOR.getLoggedEvents())
         .element(0)
@@ -56,7 +57,8 @@ class StatusCommandIntTest extends BaseApplicationIntTest {
         .matches("FAILED");
 
     application.run("down");
-    LOG_INTERCEPTOR.reset();
+
+    resetLogger();
     application.run("status");
     assertThat(LOG_INTERCEPTOR.getLoggedEvents())
         .element(0)

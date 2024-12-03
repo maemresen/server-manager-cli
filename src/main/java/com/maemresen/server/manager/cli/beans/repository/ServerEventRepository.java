@@ -55,7 +55,8 @@ public class ServerEventRepository {
   }
 
   public List<ServerEvent> searchHistory(SearchHistoryDto historySearchDto) throws SQLException {
-    String sortOrder = Optional.ofNullable(historySearchDto.getSort()).map(Enum::name).orElse(null);
+    String sortOrder =
+        Optional.ofNullable(historySearchDto.getSort()).map(Enum::name).orElse("DESC");
     String sql =
         "SELECT id, creation_time, status "
             + "FROM server_event "
@@ -63,7 +64,7 @@ public class ServerEventRepository {
             + "  AND (? IS NULL OR creation_time <= ?) "
             + "  AND (? IS NULL OR status = ?) "
             + "ORDER BY creation_time "
-            + (sortOrder != null && sortOrder.equalsIgnoreCase("DESC") ? "DESC" : "ASC");
+            + sortOrder;
 
     List<ServerEvent> results = new ArrayList<>();
 
@@ -87,6 +88,15 @@ public class ServerEventRepository {
         }
 
         return results;
+      }
+    }
+  }
+
+  public void cleanupAllEvents() throws SQLException {
+    final String sql = "DELETE FROM SERVER_EVENT";
+    try (final Connection connection = dataSource.createConnection()) {
+      try (final PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.executeUpdate();
       }
     }
   }

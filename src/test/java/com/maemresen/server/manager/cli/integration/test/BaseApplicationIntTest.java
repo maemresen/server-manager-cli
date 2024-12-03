@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -45,10 +46,11 @@ public abstract class BaseApplicationIntTest {
 
   @BeforeEach
   void setupEach(TestInfo testInfo) {
-    String testDbJdbcUrl =
-        "jdbc:h2:mem:test_db_%s;DB_CLOSE_DELAY=-1".formatted(testInfo.getDisplayName());
+    String jdbc =
+        "jdbc:h2:file:./data/test-server-db-%s;AUTO_SERVER=TRUE"
+            .formatted(testInfo.getDisplayName());
     Map<String, String> testProperties = new HashMap<>();
-    testProperties.put(DbProps.JDBC_URL, testDbJdbcUrl);
+    testProperties.put(DbProps.JDBC_URL, jdbc);
     testProperties.put(DbProps.JDBC_USERNAME, "sa");
     testProperties.put(UpCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
     testProperties.put(UpCommandProps.RANDOM_WAIT_SECONDS_MAX, "0");
@@ -70,12 +72,25 @@ public abstract class BaseApplicationIntTest {
     injector = Guice.createInjector(new TestApplicationModule(properties));
     application = injector.getInstance(Application.class);
     repository = injector.getInstance(ServerEventRepository.class);
+    resetLogger();
+  }
+
+  @AfterEach
+  void wrapUp() throws SQLException {
+    repository.cleanupAllEvents();
+  }
+
+  protected void resetLogger() {
     LOG_INTERCEPTOR.reset();
   }
 
   protected List<ServerEvent> searchServerEvents() throws SQLException {
+    return searchServerEvents(Sort.ASC);
+  }
+
+  protected List<ServerEvent> searchServerEvents(Sort sort) throws SQLException {
     SearchHistoryDto searchHistoryDto = new SearchHistoryDto();
-    searchHistoryDto.setSort(Sort.ASC);
+    searchHistoryDto.setSort(sort);
     return repository.searchHistory(searchHistoryDto);
   }
 
