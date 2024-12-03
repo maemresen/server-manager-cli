@@ -210,18 +210,6 @@ Run the following commands to test and verify the application:
 
 ---
 
-## Environment Configuration
-
-Configure these environment variables as needed:
-
-| Variable  | Default Value                                       |
-|-----------|-----------------------------------------------------|
-| `JDBC`    | `jdbc:h2:file:./data/server-status;AUTO_SERVER=TRUE` |
-| `DB_USER` | `sa`                                                |
-| `DB_PASS` | `-`                                                 |
-
----
-
 ## Build Configuration
 
 ### Plugins
