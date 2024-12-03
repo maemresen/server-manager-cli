@@ -17,7 +17,6 @@ import com.maemresen.server.manager.cli.utils.properties.DbProps;
 import com.maemresen.server.manager.cli.utils.properties.command.DownCommandProps;
 import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,8 @@ public abstract class BaseApplicationIntTest {
 
   @BeforeEach
   void setupEach(TestInfo testInfo) {
-    String testDbJdbcUrl = "jdbc:h2:mem:test_%s;DB_CLOSE_DELAY=-1".formatted(Instant.now());
+    String testDbJdbcUrl =
+        "jdbc:h2:mem:test_db_%s;DB_CLOSE_DELAY=-1".formatted(testInfo.getDisplayName());
     Map<String, String> testProperties = new HashMap<>();
     testProperties.put(DbProps.JDBC_URL, testDbJdbcUrl);
     testProperties.put(DbProps.JDBC_USERNAME, "sa");
