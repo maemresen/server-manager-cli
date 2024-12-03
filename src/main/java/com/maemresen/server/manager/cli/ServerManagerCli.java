@@ -2,9 +2,10 @@ package com.maemresen.server.manager.cli;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.maemresen.server.manager.cli.command.CommandFactory;
-import com.maemresen.server.manager.cli.command.impl.HelpCommand;
-import com.maemresen.server.manager.cli.context.ApplicationModule;
+import com.maemresen.server.manager.cli.beans.DataSource;
+import com.maemresen.server.manager.cli.beans.command.CommandFactory;
+import com.maemresen.server.manager.cli.beans.command.impl.HelpCommand;
+import com.maemresen.server.manager.cli.config.ApplicationModule;
 import com.maemresen.server.manager.cli.exception.CommandNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,8 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServerManagerCli {
   public static void main(String[] args) throws InterruptedException, SQLException, IOException {
-    DbConnection.executeFile("/scheme.sql");
     Injector injector = Guice.createInjector(new ApplicationModule());
+
+    injector.getInstance(DataSource.class).executeFile("/scheme.sql");
 
     try {
       String commandName = args[0];
