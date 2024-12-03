@@ -11,11 +11,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class DateTimeUtils {
 
-  private static final DateTimeFormatter DATE_PARAMETER_PATTERN =
+  public static final DateTimeFormatter DATE_PARAMETER_PATTERN =
       DateTimeFormatter.ofPattern("yyyy-MM-dd");
-  private static final DateTimeFormatter DATE_TIME_PARAMETER_PATTERN =
+  public static final DateTimeFormatter DATE_TIME_PARAMETER_PATTERN =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-  private static final DateTimeFormatter DATE_TIME_WITH_SECONDS_PATTERN =
+  public static final DateTimeFormatter DATE_TIME_WITH_SECONDS_PATTERN =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   /**

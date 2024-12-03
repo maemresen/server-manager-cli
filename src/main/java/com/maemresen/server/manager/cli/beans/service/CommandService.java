@@ -53,12 +53,11 @@ public class CommandService {
 
     serverEventRepository.createNewEvent(Status.STARTING);
     log.info("Starting...");
-    int min = appProps.getIntProp(UpCommandProps.RANDOM_WAIT_SECONDS_MIN).orElseThrow();
-    int max = appProps.getIntProp(UpCommandProps.RANDOM_WAIT_SECONDS_MAX).orElseThrow();
+    int min = appProps.getIntProp(UpCommandProps.RANDOM_WAIT_SECONDS_MIN).orElse(3);
+    int max = appProps.getIntProp(UpCommandProps.RANDOM_WAIT_SECONDS_MAX).orElse(10);
     RandomActionHelper.waitRandomSeconds(min, max);
     try {
-      int failureProbability =
-          appProps.getIntProp(UpCommandProps.FAILURE_PROBABILITY).orElseThrow();
+      int failureProbability = appProps.getIntProp(UpCommandProps.FAILURE_PROBABILITY).orElse(20);
       RandomActionHelper.throwRandomException(failureProbability, this::startServerException);
       serverEventRepository.createNewEvent(Status.UP);
       log.info("Started.");
@@ -79,12 +78,11 @@ public class CommandService {
 
     serverEventRepository.createNewEvent(Status.STOPPING);
     log.info("Stopping...");
-    int min = appProps.getIntProp(DownCommandProps.RANDOM_WAIT_SECONDS_MIN).orElseThrow();
-    int max = appProps.getIntProp(DownCommandProps.RANDOM_WAIT_SECONDS_MAX).orElseThrow();
+    int min = appProps.getIntProp(DownCommandProps.RANDOM_WAIT_SECONDS_MIN).orElse(3);
+    int max = appProps.getIntProp(DownCommandProps.RANDOM_WAIT_SECONDS_MAX).orElse(10);
     RandomActionHelper.waitRandomSeconds(min, max);
     try {
-      int failureProbability =
-          appProps.getIntProp(DownCommandProps.FAILURE_PROBABILITY).orElseThrow();
+      int failureProbability = appProps.getIntProp(DownCommandProps.FAILURE_PROBABILITY).orElse(20);
       RandomActionHelper.throwRandomException(failureProbability, this::stopServerException);
       serverEventRepository.createNewEvent(Status.DOWN);
       log.info("Stopped.");
