@@ -29,7 +29,7 @@ public class UpCommand extends AbstractCommand {
         PARAMETER_BEFORE,
         "before",
         true,
-        "yyyy-mm-dd hh:mm (in UTC) Schedules a server stop at the given timestamp.");
+        "yyyy-mm-dd hh:mm : (in UTC) Schedules a server stop at the given timestamp.");
   }
 
   @Override

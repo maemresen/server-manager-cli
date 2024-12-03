@@ -2,16 +2,13 @@ package com.maemresen.server.manager.cli.beans.command;
 
 import com.maemresen.server.manager.cli.beans.service.CommandService;
 import com.maemresen.server.manager.cli.utils.CmdUtils;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 
 @Slf4j
 public abstract class AbstractCommand implements Command {
@@ -42,20 +39,27 @@ public abstract class AbstractCommand implements Command {
       CommandLine cmd = parser.parse(options, args);
       Optional<Boolean> help = CmdUtils.getBooleanParameter(cmd, "h");
       if (help.isPresent()) {
-        printHelp();
+        logHelp();
       } else {
         handleCommandLine(cmd);
       }
     } catch (InterruptedException interruptedException) {
       throw interruptedException;
+    } catch (UnrecognizedOptionException e) {
+      log.error(e.getMessage());
+      logHelp();
     } catch (Exception exception) {
       log.error(exception.getMessage(), exception);
-      printHelp();
+      logHelp();
     }
   }
 
-  protected void printHelp() {
-    helpFormatter.printHelp(name, options);
+  public void logHelp() {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    helpFormatter.printHelp(printWriter, 120, name, null, options, 2, 4, null);
+    printWriter.flush();
+    log.info("\n{}", stringWriter);
   }
 
   protected abstract void handleCommandLine(CommandLine cmd)

@@ -73,10 +73,10 @@ class AbstractCommandTest {
 
     InOrder inOrder = Mockito.inOrder(command);
     inOrder.verify(command).handleCommandLine(any());
-    inOrder.verify(command).printHelp();
+    inOrder.verify(command).logHelp();
 
     assertThat(LOG_INTERCEPTOR.getLoggedEvents())
-        .hasSize(1)
+        .hasSize(2)
         .element(0)
         .extracting(ILoggingEvent::getFormattedMessage)
         .isEqualTo(exceptionMessage);

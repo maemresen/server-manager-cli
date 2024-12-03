@@ -30,17 +30,23 @@ public class HistoryCommand extends AbstractCommand {
 
   @Override
   protected void configureOptions(Options options) {
-    options.addOption(PARAMETER_FROM, "from", true, "yyyy-mm-dd");
-    options.addOption(PARAMETER_TO, "to", true, "yyyy-mm-dd");
-    options.addOption(PARAMETER_SORT, "sort", true, "asc|desc");
+    options.addOption(
+        PARAMETER_FROM, "from", true, "yyyy-mm-dd : Filter events starting from this date.");
+    options.addOption(PARAMETER_TO, "to", true, "yyyy-mm-dd : Filter events up to this date.");
+    options.addOption(
+        PARAMETER_SORT,
+        "sort",
+        true,
+        "asc|desc : Sort events in ascending or descending order based on creation timve.");
     options.addOption(
         PARAMETER_STATUS,
         "status",
         true,
         Arrays.stream(Status.values())
-            .map(Enum::name)
-            .map(String::toLowerCase)
-            .collect(Collectors.joining("|")));
+                .map(Enum::name)
+                .map(String::toLowerCase)
+                .collect(Collectors.joining("|"))
+            + " : Filter by specific server statuses.");
   }
 
   @Override
