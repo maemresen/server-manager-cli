@@ -39,7 +39,7 @@ public class UpCommand extends AbstractCommand {
   }
 
   private void waitAndDownAfter(LocalDateTime before) throws InterruptedException, SQLException {
-    Duration durationToWaitDown = Duration.between(LocalDateTime.now(), before);
+    Duration durationToWaitDown = Duration.between(DateTimeUtils.now(), before);
     if (durationToWaitDown.isPositive()) {
       ExecutionPauseUtils.delay(durationToWaitDown);
     }

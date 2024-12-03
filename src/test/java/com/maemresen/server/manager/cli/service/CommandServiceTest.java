@@ -4,11 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.ARRAY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.maemresen.server.manager.cli.exception.RandomServerException;
@@ -45,7 +41,7 @@ import org.slf4j.event.Level;
 @ExtendWith(MockitoExtension.class)
 class CommandServiceTest {
 
-  private static final LocalDateTime NOW = LocalDateTime.now();
+  private static final LocalDateTime NOW = DateTimeUtils.now();
   private static final LogInterceptor LOG_INTERCEPTOR =
       LogInterceptor.forClass(CommandService.class, Level.TRACE);
 
@@ -131,13 +127,13 @@ class CommandServiceTest {
 
       final String uptimeString = "01:01:01";
       try (final MockedStatic<DateTimeUtils> mockedDateTimeUtils =
-          mockStatic(DateTimeUtils.class)) {
+          mockStatic(DateTimeUtils.class, CALLS_REAL_METHODS)) {
         mockedDateTimeUtils
             .when(() -> DateTimeUtils.formatDuration(any()))
             .thenReturn(uptimeString);
         latestServerEvent = new ServerEvent();
         latestServerEvent.setStatus(Status.UP);
-        latestServerEvent.setCreationTime(LocalDateTime.now());
+        latestServerEvent.setCreationTime(DateTimeUtils.now());
 
         whenLatestEvent();
 

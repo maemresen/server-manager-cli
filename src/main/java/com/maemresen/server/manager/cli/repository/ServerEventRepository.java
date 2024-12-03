@@ -4,6 +4,7 @@ import com.maemresen.server.manager.cli.DbConnection;
 import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
 import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
+import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ public class ServerEventRepository {
     final String sql = "INSERT INTO SERVER_EVENT (STATUS, CREATION_TIME) VALUES (?1, ?2)";
     try (final PreparedStatement statmement = DbConnection.getConnection().prepareStatement(sql)) {
       statmement.setString(1, status.toString());
-      statmement.setObject(2, LocalDateTime.now());
+      statmement.setObject(2, DateTimeUtils.now());
       statmement.execute();
     }
   }

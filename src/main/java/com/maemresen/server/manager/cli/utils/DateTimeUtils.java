@@ -3,6 +3,7 @@ package com.maemresen.server.manager.cli.utils;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import lombok.experimental.UtilityClass;
 
@@ -71,5 +72,14 @@ public class DateTimeUtils {
    */
   public static LocalDateTime parseDateTimeWithoutSeconds(String dateString) {
     return LocalDateTime.parse(dateString, DATE_TIME_PARAMETER_PATTERN);
+  }
+
+  /**
+   * Returns the current date and time based on the system's default time zone.
+   *
+   * @return the current {@link LocalDateTime} using the system's default {@link ZoneId}.
+   */
+  public static LocalDateTime now() {
+    return LocalDateTime.now(ZoneId.systemDefault());
   }
 }

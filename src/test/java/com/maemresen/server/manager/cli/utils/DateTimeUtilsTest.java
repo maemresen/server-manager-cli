@@ -1,10 +1,12 @@
 package com.maemresen.server.manager.cli.utils;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -106,6 +108,23 @@ class DateTimeUtilsTest {
     void shouldThrowNullPointerExceptionWhenDateTimeStringIsNull() {
       assertThatThrownBy(() -> DateTimeUtils.parseDateTimeWithoutSeconds(null))
           .isInstanceOf(NullPointerException.class);
+    }
+  }
+
+  @Nested
+  class NowTests {
+
+    @Test
+    void testNow() {
+      LocalDateTime before = LocalDateTime.now(ZoneId.systemDefault());
+
+      LocalDateTime result = DateTimeUtils.now();
+
+      LocalDateTime after = LocalDateTime.now(ZoneId.systemDefault());
+
+      assertTrue(
+          !result.isBefore(before) && !result.isAfter(after),
+          "The result should be between 'before' and 'after' timestamps");
     }
   }
 }

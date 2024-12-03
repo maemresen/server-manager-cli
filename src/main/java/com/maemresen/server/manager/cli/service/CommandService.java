@@ -10,7 +10,6 @@ import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import com.maemresen.server.manager.cli.utils.RandomActionHelper;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,7 @@ public class CommandService {
     ServerEvent serverEvent = latest.get();
     Status status = serverEvent.getStatus();
     if (status == Status.UP) {
-      Duration uptime = Duration.between(serverEvent.getCreationTime(), LocalDateTime.now());
+      Duration uptime = Duration.between(serverEvent.getCreationTime(), DateTimeUtils.now());
       log.info("{} {}", DateTimeUtils.formatDuration(uptime), serverEvent.getStatus());
     } else {
       log.info("{}", serverEvent.getStatus());
