@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class DownCommandIntTest extends BaseApplicationIntTest {
 
   @Test
-  void shouldCreateStoppingAndUpEvent() throws SQLException, InterruptedException {
+  void shouldCreateStoppingAndDownEvent() throws SQLException, InterruptedException {
     application.run("down");
 
     assertStatuses(Status.STOPPING, Status.DOWN);
