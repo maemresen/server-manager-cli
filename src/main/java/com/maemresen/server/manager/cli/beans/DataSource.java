@@ -29,10 +29,9 @@ public class DataSource {
     return DriverManager.getConnection(jdbcUrl, username, password);
   }
 
-  public void executeFile(String filePath) throws SQLException, IOException {
-    try (var connection = createConnection();
+  public void execute(InputStream inputStream) throws SQLException, IOException {
+    try (Connection connection = createConnection();
         Statement statement = connection.createStatement();
-        InputStream inputStream = getClass().getResourceAsStream(filePath);
         InputStreamReader is = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(is)) {
       StringBuilder sql = new StringBuilder();

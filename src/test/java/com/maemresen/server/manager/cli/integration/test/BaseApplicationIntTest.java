@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.maemresen.server.manager.cli.beans.Application;
+import com.maemresen.server.manager.cli.beans.DataSource;
 import com.maemresen.server.manager.cli.beans.repository.ServerEventRepository;
 import com.maemresen.server.manager.cli.beans.service.CommandService;
 import com.maemresen.server.manager.cli.model.dto.SearchHistoryDto;
@@ -16,13 +17,15 @@ import com.maemresen.server.manager.cli.utils.LogInterceptor;
 import com.maemresen.server.manager.cli.utils.properties.DbProps;
 import com.maemresen.server.manager.cli.utils.properties.command.DownCommandProps;
 import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -32,12 +35,13 @@ import org.slf4j.event.Level;
 @Tag("int-test")
 public abstract class BaseApplicationIntTest {
 
-  protected static final LogInterceptor LOG_INTERCEPTOR =
+  private static final LogInterceptor LOG_INTERCEPTOR =
       LogInterceptor.forClass(CommandService.class, Level.INFO);
 
   protected Injector injector;
   protected Application application;
   protected ServerEventRepository repository;
+  protected DataSource dataSource;
 
   @BeforeAll
   static void setUp() {
@@ -45,11 +49,10 @@ public abstract class BaseApplicationIntTest {
   }
 
   @BeforeEach
-  void setupEach(TestInfo testInfo) {
-    String jdbc =
-        "jdbc:h2:file:./data/test-server-db-%s;AUTO_SERVER=TRUE"
-            .formatted(testInfo.getDisplayName());
+  void setupEach(TestInfo testInfo) throws SQLException, IOException {
     Map<String, String> testProperties = new HashMap<>();
+    String displayName = testInfo.getDisplayName();
+    String jdbc = String.format("jdbc:h2:file:./data/%s;AUTO_SERVER=TRUE", displayName);
     testProperties.put(DbProps.JDBC_URL, jdbc);
     testProperties.put(DbProps.JDBC_USERNAME, "sa");
     testProperties.put(UpCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
@@ -72,16 +75,19 @@ public abstract class BaseApplicationIntTest {
     injector = Guice.createInjector(new TestApplicationModule(properties));
     application = injector.getInstance(Application.class);
     repository = injector.getInstance(ServerEventRepository.class);
-    resetLogger();
-  }
+    dataSource = injector.getInstance(DataSource.class);
 
-  @AfterEach
-  void wrapUp() throws SQLException {
-    repository.cleanupAllEvents();
+    dataSource.execute(getClass().getResourceAsStream("/scheme.sql"));
+    executeSql("DELETE FROM PUBLIC.SERVER_EVENT WHERE 1 = 1;");
+    resetLogger();
   }
 
   protected void resetLogger() {
     LOG_INTERCEPTOR.reset();
+  }
+
+  protected List<ILoggingEvent> getLoggedEvents() {
+    return LOG_INTERCEPTOR.getLoggedEvents();
   }
 
   protected List<ServerEvent> searchServerEvents() throws SQLException {
@@ -99,8 +105,19 @@ public abstract class BaseApplicationIntTest {
   }
 
   protected void assertLogMessages(String... logMessages) {
-    assertThat(LOG_INTERCEPTOR.getLoggedEvents())
+    assertThat(getLoggedEvents())
         .map(ILoggingEvent::getFormattedMessage)
         .containsExactly(logMessages);
+  }
+
+  protected void executeSql(String sql) throws SQLException, IOException {
+    dataSource.execute(new ByteArrayInputStream(sql.getBytes(StandardCharsets.UTF_8)));
+  }
+
+  protected void createServerEvent(String creationTime, Status status)
+      throws SQLException, IOException {
+    String sql = "INSERT INTO PUBLIC.SERVER_EVENT (STATUS, CREATION_TIME) VALUES ('%s', '%s');";
+    String finalSql = String.format(sql, status, creationTime);
+    executeSql(finalSql);
   }
 }

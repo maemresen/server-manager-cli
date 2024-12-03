@@ -5,7 +5,6 @@ import com.maemresen.server.manager.cli.integration.test.TestProperty;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class UpCommandIntTest extends BaseApplicationIntTest {
 
   @Test
-  void shouldCreateStartingAndUpEvent() throws SQLException, IOException, InterruptedException {
+  void shouldCreateStartingAndUpEvent() throws SQLException, InterruptedException {
     application.run("up");
 
     assertStatuses(Status.STARTING, Status.UP);
@@ -22,8 +21,7 @@ class UpCommandIntTest extends BaseApplicationIntTest {
 
   @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "100")
   @Test
-  void shouldCreateStartingAndFailureEvent()
-      throws SQLException, IOException, InterruptedException {
+  void shouldCreateStartingAndFailureEvent() throws SQLException, InterruptedException {
     application.run("up");
 
     assertStatuses(Status.STARTING, Status.FAILED);
@@ -31,8 +29,7 @@ class UpCommandIntTest extends BaseApplicationIntTest {
   }
 
   @Test
-  void shouldNotCreateEventForAlreadyStartedServer()
-      throws SQLException, IOException, InterruptedException {
+  void shouldNotCreateEventForAlreadyStartedServer() throws SQLException, InterruptedException {
 
     application.run("up");
     application.run("up");
@@ -42,8 +39,7 @@ class UpCommandIntTest extends BaseApplicationIntTest {
   }
 
   @Test
-  void shouldDownServerIfBeforeParameterPassed()
-      throws SQLException, IOException, InterruptedException {
+  void shouldDownServerIfBeforeParameterPassed() throws SQLException, InterruptedException {
 
     LocalDateTime now = DateTimeUtils.now();
     String beforeParameter = DateTimeUtils.DATE_TIME_PARAMETER_PATTERN.format(now.plusSeconds(1));

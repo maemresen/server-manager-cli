@@ -12,10 +12,6 @@ spotless {
     }
 }
 
-tasks.processResources {
-    dependsOn(tasks.spotlessCheck)
-}
-
 repositories {
     mavenCentral()
 }
