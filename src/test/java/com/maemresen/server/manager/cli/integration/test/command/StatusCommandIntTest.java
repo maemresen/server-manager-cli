@@ -1,31 +1,69 @@
 package com.maemresen.server.manager.cli.integration.test.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.maemresen.server.manager.cli.integration.test.BaseApplicationIntTest;
 import com.maemresen.server.manager.cli.integration.test.TestProperty;
-import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
+import com.maemresen.server.manager.cli.utils.properties.command.DownCommandProps;
 import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class StatusCommandIntTest extends BaseApplicationIntTest {
 
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
-  @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "0")
+  private static final String DURATION_STRING_PATTERN = "^\\d{2}:\\d{2}:\\d{2} UP$";
+
   @Test
-  void shouldShowUptime() throws SQLException, IOException, InterruptedException {
+  void shouldLatestStatus() throws SQLException, IOException, InterruptedException {
     application.run("up");
+
+    LOG_INTERCEPTOR.reset();
     application.run("status");
+    assertThat(LOG_INTERCEPTOR.getLoggedEvents())
+        .element(0)
+        .extracting(ILoggingEvent::getFormattedMessage)
+        .asInstanceOf(STRING)
+        .matches(DURATION_STRING_PATTERN);
 
-    List<ServerEvent> serverEvents = searchServerEvents();
+    application.run("down");
+    LOG_INTERCEPTOR.reset();
+    application.run("status");
+    assertThat(LOG_INTERCEPTOR.getLoggedEvents())
+        .element(0)
+        .extracting(ILoggingEvent::getFormattedMessage)
+        .asInstanceOf(STRING)
+        .matches("DOWN");
 
-    assertThat(serverEvents).hasSize(1);
+    assertStatuses(Status.STARTING, Status.UP, Status.STOPPING, Status.DOWN);
+  }
 
-    assertStatuses(Status.STARTING, Status.UP);
+  @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "100")
+  @TestProperty(key = DownCommandProps.FAILURE_PROBABILITY, value = "100")
+  @Test
+  void shouldShowLatestFailure() throws SQLException, IOException, InterruptedException {
+    application.run("up");
+
+    LOG_INTERCEPTOR.reset();
+    application.run("status");
+    assertThat(LOG_INTERCEPTOR.getLoggedEvents())
+        .element(0)
+        .extracting(ILoggingEvent::getFormattedMessage)
+        .asInstanceOf(STRING)
+        .matches("FAILED");
+
+    application.run("down");
+    LOG_INTERCEPTOR.reset();
+    application.run("status");
+    assertThat(LOG_INTERCEPTOR.getLoggedEvents())
+        .element(0)
+        .extracting(ILoggingEvent::getFormattedMessage)
+        .asInstanceOf(STRING)
+        .matches("FAILED");
+
+    assertStatuses(Status.STARTING, Status.FAILED, Status.STOPPING, Status.FAILED);
   }
 }

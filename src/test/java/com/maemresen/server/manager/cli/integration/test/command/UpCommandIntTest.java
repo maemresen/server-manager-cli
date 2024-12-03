@@ -4,7 +4,6 @@ import com.maemresen.server.manager.cli.integration.test.BaseApplicationIntTest;
 import com.maemresen.server.manager.cli.integration.test.TestProperty;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.utils.DateTimeUtils;
-import com.maemresen.server.manager.cli.utils.properties.command.DownCommandProps;
 import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,9 +12,6 @@ import org.junit.jupiter.api.Test;
 
 class UpCommandIntTest extends BaseApplicationIntTest {
 
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
-  @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "0")
   @Test
   void shouldCreateStartingAndUpEvent() throws SQLException, IOException, InterruptedException {
     application.run("up");
@@ -24,8 +20,6 @@ class UpCommandIntTest extends BaseApplicationIntTest {
     assertLogMessages("Starting...", "Started.");
   }
 
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
   @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "100")
   @Test
   void shouldCreateStartingAndFailureEvent()
@@ -36,9 +30,6 @@ class UpCommandIntTest extends BaseApplicationIntTest {
     assertLogMessages("Starting...", "Failed.");
   }
 
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
-  @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "0")
   @Test
   void shouldNotCreateEventForAlreadyStartedServer()
       throws SQLException, IOException, InterruptedException {
@@ -50,12 +41,6 @@ class UpCommandIntTest extends BaseApplicationIntTest {
     assertLogMessages("Starting...", "Started.", "Already up.");
   }
 
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = UpCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
-  @TestProperty(key = UpCommandProps.FAILURE_PROBABILITY, value = "0")
-  @TestProperty(key = DownCommandProps.RANDOM_WAIT_SECONDS_MIN, value = "0")
-  @TestProperty(key = DownCommandProps.RANDOM_WAIT_SECONDS_MAX, value = "0")
-  @TestProperty(key = DownCommandProps.FAILURE_PROBABILITY, value = "0")
   @Test
   void shouldDownServerIfBeforeParameterPassed()
       throws SQLException, IOException, InterruptedException {

@@ -14,6 +14,8 @@ import com.maemresen.server.manager.cli.model.entity.ServerEvent;
 import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.utils.LogInterceptor;
 import com.maemresen.server.manager.cli.utils.properties.DbProps;
+import com.maemresen.server.manager.cli.utils.properties.command.DownCommandProps;
+import com.maemresen.server.manager.cli.utils.properties.command.UpCommandProps;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashMap;
@@ -44,19 +46,27 @@ public abstract class BaseApplicationIntTest {
 
   @BeforeEach
   void setupEach(TestInfo testInfo) {
-    Map<String, String> additionalProps = new HashMap<>();
+    String testDbJdbcUrl = "jdbc:h2:mem:test_%s;DB_CLOSE_DELAY=-1".formatted(Instant.now());
+    Map<String, String> testProperties = new HashMap<>();
+    testProperties.put(DbProps.JDBC_URL, testDbJdbcUrl);
+    testProperties.put(DbProps.JDBC_USERNAME, "sa");
+    testProperties.put(UpCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
+    testProperties.put(UpCommandProps.RANDOM_WAIT_SECONDS_MAX, "0");
+    testProperties.put(UpCommandProps.FAILURE_PROBABILITY, "0");
+    testProperties.put(DownCommandProps.RANDOM_WAIT_SECONDS_MIN, "0");
+    testProperties.put(DownCommandProps.RANDOM_WAIT_SECONDS_MAX, "0");
+    testProperties.put(DownCommandProps.FAILURE_PROBABILITY, "0");
+
     testInfo
         .getTestMethod()
-        .map(method -> method.getDeclaredAnnotation(TestProperty.class))
-        .map(Stream::of)
-        .orElseGet(Stream::empty)
-        .forEach(testProperty -> additionalProps.put(testProperty.key(), testProperty.value()));
+        .map(method -> method.getDeclaredAnnotationsByType(TestProperty.class))
+        .stream()
+        .flatMap(Stream::of)
+        .forEach(testProperty -> testProperties.put(testProperty.key(), testProperty.value()));
 
     Properties properties = new Properties();
-    String testDbJdbcUrl = "jdbc:h2:mem:test_%s;DB_CLOSE_DELAY=-1".formatted(Instant.now());
-    properties.setProperty(DbProps.JDBC_URL, testDbJdbcUrl);
-    properties.setProperty(DbProps.JDBC_USERNAME, "sa");
-    additionalProps.forEach(additionalProps::put);
+    testProperties.forEach(properties::setProperty);
+
     injector = Guice.createInjector(new TestApplicationModule(properties));
     application = injector.getInstance(Application.class);
     repository = injector.getInstance(ServerEventRepository.class);
