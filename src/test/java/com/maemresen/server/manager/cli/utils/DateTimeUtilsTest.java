@@ -1,12 +1,8 @@
 package com.maemresen.server.manager.cli.utils;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -116,15 +112,13 @@ class DateTimeUtilsTest {
 
     @Test
     void testNow() {
-      LocalDateTime before = LocalDateTime.now(ZoneId.systemDefault());
+      LocalDateTime before = LocalDateTime.now(ZoneOffset.UTC);
 
       LocalDateTime result = DateTimeUtils.now();
 
-      LocalDateTime after = LocalDateTime.now(ZoneId.systemDefault());
+      LocalDateTime after = LocalDateTime.now(ZoneOffset.UTC);
 
-      assertTrue(
-          !result.isBefore(before) && !result.isAfter(after),
-          "The result should be between 'before' and 'after' timestamps");
+      assertThat(result).isBetween(before, after);
     }
   }
 }

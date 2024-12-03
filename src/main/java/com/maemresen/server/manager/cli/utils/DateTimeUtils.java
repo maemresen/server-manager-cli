@@ -1,9 +1,6 @@
 package com.maemresen.server.manager.cli.utils;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import lombok.experimental.UtilityClass;
 
@@ -80,6 +77,6 @@ public class DateTimeUtils {
    * @return the current {@link LocalDateTime} using the system's default {@link ZoneId}.
    */
   public static LocalDateTime now() {
-    return LocalDateTime.now(ZoneId.systemDefault());
+    return LocalDateTime.now(ZoneOffset.UTC);
   }
 }

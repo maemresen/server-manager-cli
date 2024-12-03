@@ -145,7 +145,7 @@ up [--before yyyy-mm-dd hh:mm]
 - Optionally specify `--before` to schedule an automatic stop.
 
 **Parameters**:
-- `--before yyyy-mm-dd hh:mm`: (Optional) Schedules a server stop at the given timestamp.
+- `--before yyyy-mm-dd hh:mm`: (Optional) Schedules a server stop at the given timestamp in UTC timezone.
 
 ---
 

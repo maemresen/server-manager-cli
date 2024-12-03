@@ -25,7 +25,11 @@ public class UpCommand extends AbstractCommand {
 
   @Override
   protected void configureOptions(Options options) {
-    options.addOption(PARAMETER_BEFORE, "before", true, "before the command");
+    options.addOption(
+        PARAMETER_BEFORE,
+        "before",
+        true,
+        "yyyy-mm-dd hh:mm (in UTC) Schedules a server stop at the given timestamp.");
   }
 
   @Override
