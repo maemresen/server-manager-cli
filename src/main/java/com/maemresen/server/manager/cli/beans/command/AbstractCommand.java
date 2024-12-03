@@ -45,7 +45,7 @@ public abstract class AbstractCommand implements Command {
       }
     } catch (InterruptedException interruptedException) {
       throw interruptedException;
-    } catch (UnrecognizedOptionException e) {
+    } catch (ParseException e) {
       log.error(e.getMessage());
       logHelp();
     } catch (Exception exception) {
