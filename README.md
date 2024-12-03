@@ -5,6 +5,7 @@
 
 Server Manager CLI is a lightweight proof-of-concept (POC) command-line tool for managing server operations. It demonstrates essential server management capabilities, such as starting, stopping, checking server status, and viewing server history. The workflow involves storing server event data in a file-based H2 database, making it easy to run locally or via Docker.
 
+![](./server-manager-cli-example.gif)
 ---
 
 ## Table of Contents
