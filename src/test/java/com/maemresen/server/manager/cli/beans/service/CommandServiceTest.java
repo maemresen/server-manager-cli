@@ -116,7 +116,7 @@ class CommandServiceTest {
           .hasSize(1)
           .element(0)
           .extracting(ILoggingEvent::getFormattedMessage)
-          .isEqualTo("No searchHistory found for the server.");
+          .isEqualTo("No history found for the server.");
     }
 
     @ParameterizedTest

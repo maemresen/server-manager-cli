@@ -31,7 +31,7 @@ public class CommandService {
   public void status() throws SQLException {
     Optional<ServerEvent> latest = serverEventRepository.findLatest();
     if (latest.isEmpty()) {
-      log.info("No searchHistory found for the server.");
+      log.info("No history found for the server.");
       return;
     }
 
