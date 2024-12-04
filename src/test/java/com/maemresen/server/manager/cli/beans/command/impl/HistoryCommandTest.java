@@ -13,6 +13,7 @@ import com.maemresen.server.manager.cli.model.entity.Status;
 import com.maemresen.server.manager.cli.utils.DateTimeUtils;
 import java.sql.SQLException;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +51,7 @@ class HistoryCommandTest {
   }
 
   @Test
-  void shouldRunCommand() throws SQLException {
+  void shouldRunCommand() throws SQLException, ParseException {
     doNothingWhenSearchHistory();
 
     command.handleCommandLine(mockCmd);
@@ -60,7 +61,7 @@ class HistoryCommandTest {
   }
 
   @Test
-  void shouldSetFromParameter() throws SQLException {
+  void shouldSetFromParameter() throws SQLException, ParseException {
     doNothingWhenSearchHistory();
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_FROM, DATE_STRING);
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_TO);
@@ -78,7 +79,7 @@ class HistoryCommandTest {
   }
 
   @Test
-  void shouldSetToParameter() throws SQLException {
+  void shouldSetToParameter() throws SQLException, ParseException {
     doNothingWhenSearchHistory();
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_FROM);
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_TO, DATE_STRING);
@@ -97,7 +98,7 @@ class HistoryCommandTest {
 
   @ParameterizedTest
   @EnumSource(Sort.class)
-  void shouldSetSortParameter(Sort sort) throws SQLException {
+  void shouldSetSortParameter(Sort sort) throws SQLException, ParseException {
     doNothingWhenSearchHistory();
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_FROM);
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_TO);
@@ -114,7 +115,7 @@ class HistoryCommandTest {
 
   @ParameterizedTest
   @EnumSource(Status.class)
-  void shouldSetStatusParameter(Status status) throws SQLException {
+  void shouldSetStatusParameter(Status status) throws SQLException, ParseException {
     doNothingWhenSearchHistory();
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_FROM);
     whenCmdGetParameterValue(HistoryCommand.PARAMETER_TO);

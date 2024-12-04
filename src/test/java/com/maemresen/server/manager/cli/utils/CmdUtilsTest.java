@@ -2,6 +2,7 @@ package com.maemresen.server.manager.cli.utils;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.maemresen.server.manager.cli.exception.EnumValueParseException;
 import java.util.Optional;
 import org.apache.commons.cli.CommandLine;
 import org.junit.jupiter.api.Nested;
@@ -43,7 +44,7 @@ class CmdUtilsTest {
     }
 
     @Test
-    void shouldReturnEnumValueWhenParameterExists() {
+    void shouldReturnEnumValueWhenParameterExists() throws EnumValueParseException {
       CommandLine cmd = Mockito.mock(CommandLine.class);
       Mockito.when(cmd.hasOption("test-enum")).thenReturn(true);
       Mockito.when(cmd.getOptionValue("test-enum")).thenReturn("option_one");
@@ -60,12 +61,13 @@ class CmdUtilsTest {
       Mockito.when(cmd.getOptionValue("test-enum")).thenReturn("invalid_option");
 
       assertThatThrownBy(() -> CmdUtils.getEnumParameter(cmd, "test-enum", TestEnum.class))
-          .isInstanceOf(IllegalArgumentException.class)
-          .hasMessageContaining("No enum constant");
+          .isInstanceOf(EnumValueParseException.class)
+          .hasMessageContaining(
+              "Failed to parse enum value for option: test-enum.");
     }
 
     @Test
-    void shouldReturnEmptyWhenParameterDoesNotExist() {
+    void shouldReturnEmptyWhenParameterDoesNotExist() throws EnumValueParseException {
       CommandLine cmd = Mockito.mock(CommandLine.class);
       Mockito.when(cmd.hasOption("test-enum")).thenReturn(false);
 

@@ -1,5 +1,6 @@
 package com.maemresen.server.manager.cli.utils;
 
+import com.maemresen.server.manager.cli.exception.EnumValueParseException;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
@@ -22,19 +23,35 @@ public class CmdUtils {
   }
 
   /**
-   * Retrieves an enum parameter from the given {@link CommandLine}.
+   * Retrieves an enum parameter from the specified {@link CommandLine} instance.
    *
-   * @param cmd the {@link CommandLine} object to extract the parameter from
+   * <p>This method attempts to extract the value of a parameter from the provided {@link
+   * CommandLine}, map it to an enum constant of the specified type, and return it as an {@link
+   * Optional}. If the parameter does not exist, {@link Optional#empty()} is returned. If the value
+   * cannot be mapped to a valid enum constant, an {@link EnumValueParseException} is thrown.
+   *
+   * @param cmd the {@link CommandLine} object containing the parameters
    * @param parameter the name of the parameter to extract
-   * @param enumClass the class of the enum to map the parameter to
+   * @param enumClass the {@link Class} object of the enum type to map the parameter to
    * @param <E> the type of the enum
-   * @return an {@link Optional} containing the mapped enum value if the parameter exists and can be
-   *     mapped; otherwise, {@code Optional.empty()}
-   * @throws IllegalArgumentException if the parameter value cannot be mapped to the specified enum
+   * @return an {@link Optional} containing the corresponding enum value if the parameter exists and
+   *     is valid; otherwise, {@link Optional#empty()}
+   * @throws EnumValueParseException if the parameter value cannot be mapped to the specified enum
+   *     type
    */
   public static <E extends Enum<E>> Optional<E> getEnumParameter(
-      CommandLine cmd, String parameter, Class<E> enumClass) {
-    return getParameter(cmd, parameter, value -> Enum.valueOf(enumClass, value.toUpperCase()));
+      CommandLine cmd, String parameter, Class<E> enumClass) throws EnumValueParseException {
+
+    Optional<String> enumValueString = getParameter(cmd, parameter, Function.identity());
+    if (enumValueString.isEmpty()) {
+      return Optional.empty();
+    }
+
+    try {
+      return Optional.of(Enum.valueOf(enumClass, enumValueString.get().toUpperCase()));
+    } catch (IllegalArgumentException exception) {
+      throw new EnumValueParseException(parameter);
+    }
   }
 
   /**

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 @Slf4j
 public class HistoryCommand extends AbstractCommand {
@@ -50,7 +51,7 @@ public class HistoryCommand extends AbstractCommand {
   }
 
   @Override
-  protected void handleCommandLine(CommandLine cmd) throws SQLException {
+  protected void handleCommandLine(CommandLine cmd) throws SQLException, ParseException {
     SearchHistoryDto searchHistoryDto = new SearchHistoryDto();
 
     CmdUtils.getParameter(cmd, PARAMETER_FROM, DateTimeUtils::parseDate)

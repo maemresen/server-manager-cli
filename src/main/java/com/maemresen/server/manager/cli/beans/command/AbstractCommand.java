@@ -59,7 +59,7 @@ public abstract class AbstractCommand implements Command {
     PrintWriter printWriter = new PrintWriter(stringWriter);
     helpFormatter.printHelp(printWriter, 120, name, null, options, 2, 4, null);
     printWriter.flush();
-    log.info("\n{}", stringWriter);
+    log.info("{}", stringWriter);
   }
 
   protected abstract void handleCommandLine(CommandLine cmd)
