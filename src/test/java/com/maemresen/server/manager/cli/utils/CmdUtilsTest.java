@@ -62,8 +62,7 @@ class CmdUtilsTest {
 
       assertThatThrownBy(() -> CmdUtils.getEnumParameter(cmd, "test-enum", TestEnum.class))
           .isInstanceOf(EnumValueParseException.class)
-          .hasMessageContaining(
-              "Failed to parse enum value for option: test-enum.");
+          .hasMessageContaining("Failed to parse enum value for option: test-enum.");
     }
 
     @Test
